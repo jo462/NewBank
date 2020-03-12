@@ -14,6 +14,7 @@ public class ExampleClient extends Thread{
 	private BufferedReader userInput;
 	private Thread bankServerResponceThread;
 	
+	//This method initially gets user input via run() and then outputs the response
 	public ExampleClient(String ip, int port) throws UnknownHostException, IOException {
 		server = new Socket(ip,port);
 		userInput = new BufferedReader(new InputStreamReader(System.in)); 
@@ -36,7 +37,7 @@ public class ExampleClient extends Thread{
 		bankServerResponceThread.start();
 	}
 	
-	
+	//This method gets the user input and acknowledges the command
 	public void run() {
 		while(true) {
 			try {
@@ -51,6 +52,8 @@ public class ExampleClient extends Thread{
 		}
 	}
 	
+	
+	//When this class is called it calls on ExampleClient() method
 	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
 		new ExampleClient("localhost",14002).start();
 	}

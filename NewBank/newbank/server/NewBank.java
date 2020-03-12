@@ -12,6 +12,7 @@ public class NewBank {
 		addTestData();
 	}
 	
+	//Testing new customer setup. The structure appears like "account name" - whatever you'd like, but for Customer it needs to record the actual name
 	private void addTestData() {
 		Customer bhagy = new Customer();
 		bhagy.addAccount(new Account("Main", 1000.0));
@@ -26,10 +27,12 @@ public class NewBank {
 		customers.put("John", john);
 	}
 	
+	//Returns name of bank, or should it be branch?
 	public static NewBank getBank() {
 		return bank;
 	}
 	
+	//Checks if a customer ID exists, if so it returns the username otherwise the null value return
 	public synchronized CustomerID checkLogInDetails(String userName, String password) {
 		if(customers.containsKey(userName)) {
 			return new CustomerID(userName);
@@ -47,6 +50,7 @@ public class NewBank {
 		}
 		return "FAIL";
 	}
+	
 	
 	private String showMyAccounts(CustomerID customer) {
 		return (customers.get(customer.getKey())).accountsToString();
