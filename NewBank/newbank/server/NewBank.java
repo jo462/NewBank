@@ -6,7 +6,7 @@ public class NewBank {
 	
 	private static final NewBank bank = new NewBank();
 	private HashMap<String,Customer> customers;
-	
+	private int attempts = 3;
 	private NewBank() {
 		customers = new HashMap<>();
 		addTestData();
@@ -33,14 +33,32 @@ public class NewBank {
 	}
 	
 	//Checks if a customer ID exists, if so it returns the username otherwise the null value return
+	/*
+	 commands from the NewBank customer are processed in this method
+	In CustomerID.java add ArrayList<Customer> customers
+	 to add and getKey
+	 Also we need a method to generate userName from the credentials ex. accountName Luke Skywalker username walker1
+	*/
 	public synchronized CustomerID checkLogInDetails(String userName, String password) {
-		if(customers.containsKey(userName)) {
-			return new CustomerID(userName);
-		}
-		return null;
-	}
 
-	// commands from the NewBank customer are processed in this method
+       int i;
+		//while loop to count attempts
+       while (attempts != 0) {
+			if (customers.containsKey(userName) && customers.containsKey(password)) {
+				CustomerID customerID = new CustomerID(userName);
+				return customerID;}
+			 else {
+				i = attempts--;
+				System.out.println("Incorrect, You have" + i + "attempts left");
+			} if (i == 0){
+				System.out.println("Maximum number of attempts exceeded");
+			}
+		}
+	/*
+	 commands from the NewBank customer are processed in this method
+	In CustomerID.java add ArrayList<Customer> customers
+	 to add and getKey
+	*/
 	public synchronized String processRequest(CustomerID customer, String request) {
 		if(customers.containsKey(customer.getKey())) {
 			switch(request) {
@@ -53,7 +71,11 @@ public class NewBank {
 	
 	
 	private String showMyAccounts(CustomerID customer) {
+
 		return (customers.get(customer.getKey())).accountsToString();
 	}
+
+	private void
+
 
 }
