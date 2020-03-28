@@ -12,7 +12,6 @@ public class NewBank {
 		addTestData();
 	}
 	
-	//Testing new customer setup. The structure appears like "account name" - whatever you'd like, but for Customer it needs to record the actual name
 	private void addTestData() {
 		Customer bhagy = new Customer();
 		bhagy.addAccount(new Account("Main", 1000.0));
@@ -27,12 +26,10 @@ public class NewBank {
 		customers.put("John", john);
 	}
 	
-	//Returns name of bank, or should it be branch?
 	public static NewBank getBank() {
 		return bank;
 	}
 	
-	//Checks if a customer ID exists, if so it returns the username otherwise the null value return
 	public synchronized CustomerID checkLogInDetails(String userName, String password) {
 		if(customers.containsKey(userName)) {
 			return new CustomerID(userName);
@@ -43,14 +40,29 @@ public class NewBank {
 	// commands from the NewBank customer are processed in this method
 	public synchronized String processRequest(CustomerID customer, String request) {
 		if(customers.containsKey(customer.getKey())) {
-			switch(request) {
+			String[] array = request.split(" ");
+			switch(array[0]) {
 			case "SHOWMYACCOUNTS" : return showMyAccounts(customer);
+			case "NEWACCOUNT" : 
+				if(customers.get(customer.getKey()).hasAccount(array[1]))
+					return "FAIL";
+				customers.get(customer.getKey()).addAccount(new Account(array[1], 0.0));
+				return "SUCCESS";
+			case "PAY":
+				if(customers.containsKey(array[1]) == false)
+					return "FAIL";
+				if(customers.get(customer.getKey()).pay(Double.parseDouble(array[2]))){
+					customers.get(array[1]).acceptPayment(Double.parseDouble(array[2]));
+					return "SUCCESS";
+				}
+			case "MOVE":
+				if(customers.get(customer.getKey()).move(array[2], array[3], Double.parseDouble(array[1])))
+					return "SUCCESS";
 			default : return "FAIL";
 			}
 		}
 		return "FAIL";
 	}
-	
 	
 	private String showMyAccounts(CustomerID customer) {
 		return (customers.get(customer.getKey())).accountsToString();
