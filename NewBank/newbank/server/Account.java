@@ -12,18 +12,23 @@ public class Account {
 	private String emailAddress;
 	//Mail Address_ this to be used for sending letters and post to a customer
 	private String mailAddress;
-	//Constructor for a new account which is opened using account name and starting/ opening balance
-	public Account(String accountName, double openingBalance, String emailAddress,String mailAddress) {
+    private String password;
+
+
+
+	//Constructor for a new account which is opened using account name and starting/ opening balance/email address/ and mail address
+	public Account(String accountName, double openingBalance, String emailAddress,String mailAddress,String password) {
 		this.accountName = accountName;
 		this.openingBalance = openingBalance;
 		this.emailAddress= emailAddress;
 		this.mailAddress= mailAddress;
+		this.mailAddress= password;
 
 	}
 	
 	//This method when called returns the account name and opening balance
 	public String toString() {
-		return (accountName + ": " + openingBalance + ": " + emailAddress + ": " + mailAddress);
+		return (accountName + ": " + openingBalance + ": " + emailAddress + ": " + mailAddress ": " + password );
 	}
     //Below accessor methods toGet customer information one by one
 	//method toGetAccountName
@@ -35,12 +40,16 @@ public class Account {
 		return openingBalance;
 	}
 	//method GetEmailAddress
-	public String getEmailAddress(){
-		return emailAddress;
+	public String getEmailAddress(){ return emailAddress;
 	}
 	//method GetEmailAddress
 	public String getMailAddress(){
 		return mailAddress;
+	}
+	//method GetPassword
+	public String getPassword(){
+
+		return password;
 	}
 
 	/*
@@ -59,5 +68,7 @@ public class Account {
 		}
 
 	}
+
+
 
 }
