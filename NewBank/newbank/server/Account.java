@@ -4,32 +4,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Account {
-
+	
 	private String accountName;
 	private double openingBalance;
-	//Email Address - this is to be used for username
-	private String emailAddress;
-	//Mail Address_ this to be used for sending letters and post to a customer
-	private String mailAddress;
-    private String password;
 
 
 
-	//Constructor for a new account which is opened using account name and starting/ opening balance/email address/ and mail address
-	public Account(String accountName, double openingBalance, String emailAddress,String mailAddress,String password) {
-
+	//Constructor for a new account which is opened using account name and starting/ opening balance
 	public Account(String accountName, double openingBalance) {
 		this.accountName = accountName;
 		this.openingBalance = openingBalance;
-		this.emailAddress= emailAddress;
-		this.mailAddress= mailAddress;
-		this.mailAddress= password;
-
 	}
 	
 	//This method when called returns the account name and opening balance
 	public String toString() {
-		return (accountName + ": " + openingBalance + ": " + emailAddress + ": " + mailAddress ": " + password );
+		return accountName + ": " + openingBalance;
 	}
     //Below accessor methods toGet customer information one by one
 	//method toGetAccountName
@@ -37,42 +26,17 @@ public class Account {
 		return accountName;
 	}
 
+    //Below accessor methods toGet customer information one by one
+	//method toGetBalance
 	public double getBalance(){
 		return openingBalance;
 	}
-	//method GetEmailAddress
-	public String getEmailAddress(){ return emailAddress;
-	}
-	//method GetEmailAddress
-	public String getMailAddress(){
-		return mailAddress;
-
+	//Method to add money to account
 	public void add(double money){
 		openingBalance += money;
 	}
-	//method GetPassword
-	public String getPassword(){
-
-		return password;
-	}
-
-	/*
-	this method does not allow duplicate email addresses. if an existing email address is already in use,
-	 a message box notify to the user to change his email address, else a message notify_your email has been added
-	*/
-	public void duplicatedEmailsNotAllowed(){
-		Set<Account> accountSet = new HashSet<Account>();
-		for(Account acc : accountSet){
-			if(accountSet.contains(acc)){
-				System.out.println("Account with account email " + acc.getEmailAddress() + "already exists. Insert a not existing email address");
-			} else {
-				accountSet.add(acc);
-				System.out.println("Your email has been added");
-			}
-		}
-
-	}
-
+	
+	//Method to deduct money from account
 	public boolean deduct(double money){
 		if(money > openingBalance)
 			return false;
@@ -80,8 +44,5 @@ public class Account {
 		return true;
 	}
 
-	public String toString() {
-		return (accountName + ": " + openingBalance);
-	}
 
 }

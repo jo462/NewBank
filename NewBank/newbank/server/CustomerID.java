@@ -1,5 +1,9 @@
 package newbank.server;
-
+/*
+*
+* @author Samuel
+*
+*/
 public class CustomerID {
 	private String key;
 	
@@ -7,6 +11,10 @@ public class CustomerID {
 		this.key = key;
 	}
 	
+	public void setKey(String key){
+		this.key = key;
+	}
+
 	public String getKey() {
 		return key;
 	}
