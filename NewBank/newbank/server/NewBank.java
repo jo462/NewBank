@@ -123,6 +123,7 @@ public class NewBank {
 		return "FAIL";
 	}
 	
+	//Method to show the customer their bank balance
 	private String showMyAccounts(CustomerID customer) {
 		return (customers.get(customer.getKey())).accountsToString();
 	}
