@@ -18,7 +18,7 @@ public class Account {
 	
 	//This method when called returns the account name and opening balance
 	public String toString() {
-		return accountName + ": " + openingBalance;
+		return String.format("%s %.2f", accountName, openingBalance) + "\n" ;
 	}
     //Below accessor methods toGet customer information one by one
 	//method toGetAccountName
