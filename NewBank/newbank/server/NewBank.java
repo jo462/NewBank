@@ -93,11 +93,11 @@ public class NewBank {
 			case "SHOWMYACCOUNTS" : return showMyAccounts(customer);
 			//Enables user to deposit 
 			case "DEPOSIT":
-				if(customers.get(customer.getKey()).deposit(array[1], Double.parseDouble(array[2])))
+				if(customers.get(customer.getKey()).deposit(array[1], (double)Double.parseDouble(array[2])))
 					return "SUCCESS";
 			//Enables user to withdraw	
 			case "WITHDRAW":
-				if(customers.get(customer.getKey()).withdraw(array[1], Double.parseDouble(array[2])))
+				if(customers.get(customer.getKey()).withdraw(array[1], (double) Double.parseDouble(array[2])))
 					return "SUCCESS";
 			//Enables user to add account			
 			case "NEWACCOUNT" : 
@@ -109,13 +109,13 @@ public class NewBank {
 			case "PAY":
 				if(customers.containsKey(array[1]) == false)
 					return "FAIL";
-				if(customers.get(customer.getKey()).pay(Double.parseDouble(array[2]))){
-					customers.get(array[1]).acceptPayment(Double.parseDouble(array[2]));
+				if(customers.get(customer.getKey()).pay((double)Double.parseDouble(array[2]))){
+					customers.get(array[1]).acceptPayment((double)Double.parseDouble(array[2]));
 					return "SUCCESS";
 				}
 			//Enables user to move amount from one account to other	
 			case "MOVE":
-				if(customers.get(customer.getKey()).move(array[2], array[3], Double.parseDouble(array[1])))
+				if(customers.get(customer.getKey()).move(array[2], array[3], (double) Double.parseDouble(array[1])))
 					return "SUCCESS";
 			default : return "FAIL";
 			}
