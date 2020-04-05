@@ -6,19 +6,22 @@ import java.util.Set;
 public class Account {
 	
 	private String accountName;
+	private static int accCount=1;
 	private double openingBalance;
-
+	private String accountNumber;
 
 
 	//Constructor for a new account which is opened using account name and starting/ opening balance
 	public Account(String accountName, double openingBalance) {
+		//accCount++;
 		this.accountName = accountName;
 		this.openingBalance = openingBalance;
+		accountNumber = String.format("%08d", accCount++);
 	}
 	
 	//This method when called returns the account name and opening balance
 	public String toString() {
-		return accountName + ": " + openingBalance;
+		return String.format("%s %s %.2f",accountNumber, accountName, openingBalance) + "\n" ;
 	}
     //Below accessor methods toGet customer information one by one
 	//method toGetAccountName
@@ -44,5 +47,9 @@ public class Account {
 		return true;
 	}
 
+	//Method to get account number
+	public String getAccountNumber() {
+		return accountNumber;
+	}
 
 }
