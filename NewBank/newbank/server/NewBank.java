@@ -1,4 +1,5 @@
 package newbank.server;
+import java.util.ArrayList;
 /*
 *
 * @author Samuel
@@ -13,6 +14,10 @@ public class NewBank {
 	private HashMap<String, String> emailadresses;
 	private HashMap<String,Customer> customers;
 	private HashMap<String,CustomerPassword> logInData;
+	private Ledger bankLedger = new Ledger();
+	private String newBankAcc = "00000000";
+	private String newBankAccName = "New Bank PLC";
+	
 	private NewBank() {
 		emailadresses = new HashMap<>();
 		customers = new HashMap<>();
@@ -70,7 +75,7 @@ public class NewBank {
 	public synchronized String processRequest(CustomerID customer, String request) {
 		if(customers.containsKey(customer.getKey())) {
 			String[] array = request.split(" ");
-			switch(array[0]) {
+			switch(array[0].toUpperCase()) {
 			//Enables user to read his own profile
 			case "SHOWMYPROFILE": return customer.getKey()+"\n"+customers.get(customer.getKey()).getEmailAdress()+"\n"+showMyAccounts(customer);
 			//Enables user to change username
@@ -93,12 +98,13 @@ public class NewBank {
 			case "SHOWMYACCOUNTS" : return showMyAccounts(customer);
 			//Enables user to deposit 
 			case "DEPOSIT":
-				if(customers.get(customer.getKey()).deposit(array[1], (double)Double.parseDouble(array[2])))
-					return "SUCCESS";
+				//if(customers.get(customer.getKey()).deposit(array[1], (double)Double.parseDouble(array[2])))
+					
+				return deposit(customer,array[1],(double)Double.parseDouble(array[2]),array[3]);
 			//Enables user to withdraw	
 			case "WITHDRAW":
-				if(customers.get(customer.getKey()).withdraw(array[1], (double) Double.parseDouble(array[2])))
-					return "SUCCESS";
+				//if(customers.get(customer.getKey()).withdraw(array[1], (double) Double.parseDouble(array[2])))
+					return withdraw(customer,array[1],(double)Double.parseDouble(array[2]),array[3]);
 			//Enables user to add account			
 			case "NEWACCOUNT" : 
 				if(customers.get(customer.getKey()).hasAccount(array[1]))
@@ -127,5 +133,98 @@ public class NewBank {
 	private String showMyAccounts(CustomerID customer) {
 		return (customers.get(customer.getKey())).accountsToString();
 	}
+
+	
+	
+	//Converts input to an absolute value
+	private Double abs(Double amount) {
+		
+		if(amount<0) {
+			amount = amount*-1;
+		}
+		
+		return amount;
+	}
+	
+	
+	
+	
+	/*
+	 * Customer deposit using the system date
+	 */
+	private String deposit(CustomerID customer,String accountName, Double amount, String description ) {
+				
+		String accountNo = customers.get(customer.getKey()).getAccountNo(accountName);
+						
+		if(accountNo==null) {
+			return "Account name '"+accountName+ "' does not exist, try again";
+		} else {
+		
+		//Building the double entry
+		Entry entry1 = new Entry(accountNo,accountName,TransType.DEPOSIT,abs(amount),customers.get(customer.getKey()).getCustomerID(),description);
+		Entry entry2 = new Entry(newBankAcc,newBankAccName,TransType.DEPOSIT,abs(amount)*-1, newBankAccName, "Customer Deposit");
+		ArrayList<Entry> myPosting = new ArrayList<Entry>();
+		
+		myPosting.add(entry1);
+		myPosting.add(entry2);
+		
+		postTransaction(new Transaction(myPosting));
+		
+		return "SUCCESS";}
+		
+	}
+	
+	/*
+	 * Customer withdrawal using the system date
+	 */
+	private String withdraw(CustomerID customer,String accountName, Double amount, String description ) {
+				
+		String accountNo = customers.get(customer.getKey()).getAccountNo(accountName);
+						
+		if(accountNo==null) {
+			return "Account name '"+accountName+ "' does not exist, try again";
+		} else {
+						
+		//Building the double entry
+		Entry entry1 = new Entry(accountNo,accountName,TransType.WITHDRAW,abs(amount)*-1,customers.get(customer.getKey()).getCustomerID(),description);
+		Entry entry2 = new Entry(newBankAcc,newBankAccName,TransType.WITHDRAW,abs(amount), newBankAccName, "Customer Deposit");
+		ArrayList<Entry> myPosting = new ArrayList<Entry>();
+		
+		myPosting.add(entry1);
+		myPosting.add(entry2);
+		
+		postTransaction(new Transaction(myPosting));
+		
+		return "SUCCESS";}
+		
+	}
+	
+	
+	
+	
+	/*
+	 * Adds a given transaction to the ledger
+	 */
+	private void postTransaction(Transaction transaction) {
+		bankLedger.addTransaction(transaction);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

@@ -85,5 +85,26 @@ public class Customer {
 	public void addAccount(Account account) {
 		accounts.add(account);		
 	}
-		
+	
+	//Main account is always the first account added
+	public Account getMainAccount() {
+		return accounts.get(0);
+	}
+	
+	//Returns the Customer ID
+	public String getCustomerID() {
+		return emailAddress;
+	}
+	
+	//Method to get account number from a given account name
+		public String getAccountNo(String accountName){
+			for(Account a: accounts){
+				if(a.getAccountName().equals(accountName)){
+					//a.add(amount);
+					return a.getAccountNumber();
+				}
+			}
+			return null;
+		}
+	
 }
