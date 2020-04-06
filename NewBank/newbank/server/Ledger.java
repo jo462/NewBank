@@ -70,6 +70,21 @@ public class Ledger {
 
 	}
 
+	
+	public Double currentBalance(String accountNo) {
+		
+		Double balance = 0.00;
+		
+	balance = 	myLedger
+					.values()
+					.stream()
+					.mapToDouble(x -> x.getAmount(accountNo))
+					.sum();
+				
+		return balance;
+	}
+	
+	
 
 	/*
 	 * Prints a header. Can be called before output of transactions

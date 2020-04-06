@@ -110,12 +110,10 @@ public class NewBank {
 				return "SUCCESS";
 				//Enables user to pay to other users
 			case "PAY":
-				if(customers.containsKey(array[1]) == false)
-					return "FAIL";
-				if(customers.get(customer.getKey()).pay((double)Double.parseDouble(array[2]))){
-					customers.get(array[1]).acceptPayment((double)Double.parseDouble(array[2]));
-					return "SUCCESS";
-				}
+				if(customers.containsKey(array[1]) == false) {
+					return "PAYEE NOT FOUND, TRY AGAIN";}
+					return pay(customer,array[1],(double) Double.parseDouble(array[2]),array[3]);
+				
 				//Enables user to move amount from one account to other	
 			case "MOVE":
 				return move(customer, array[2],array[3],(double) Double.parseDouble(array[1]),array[4]);
@@ -142,6 +140,34 @@ public class NewBank {
 		return amount;
 	}
 
+	
+	/*
+	 * Customer payment using the system date
+	 */
+	private String pay(CustomerID customer,String payee, Double amount, String description ) {
+
+		String payer = customers.get(customer.getKey()).getMainAccount().getAccountNumber();
+		String payto = customers.get(payee).getMainAccount().getAccountNumber();
+
+		if(bankLedger.currentBalance(payer)<amount) {
+			return "Insufficient funds";
+		} else {
+
+			//Building the double entry
+			Entry entry1 = new Entry(payto,customers.get(payee).getMainAccount().getAccountName(),TransType.TRANSFER,abs(amount),payee,description);
+			Entry entry2 = new Entry(payer,customers.get(customer.getKey()).getMainAccount().getAccountName(),TransType.TRANSFER,abs(amount)*-1, customers.get(customer.getKey()).getCustomerID(), description);
+			ArrayList<Entry> myPosting = new ArrayList<Entry>();
+
+			myPosting.add(entry1);
+			myPosting.add(entry2);
+
+			postTransaction(new Transaction(myPosting));
+
+			return "SUCCESS! New balance: "+bankLedger.currentBalance(payer);}
+
+	}
+		
+	
 	/*
 	 * Customer move using the system date
 	 */
@@ -150,6 +176,10 @@ public class NewBank {
 		String accfrom = customers.get(customer.getKey()).getAccountNo(from);
 		String accto = customers.get(customer.getKey()).getAccountNo(to);
 
+		if(bankLedger.currentBalance(accfrom)<amount) {
+			return "Insufficient funds";
+		}
+			
 		if(accfrom==null || accto==null) {
 			return "Invalid account details entered, try again";
 		} else {
@@ -164,7 +194,7 @@ public class NewBank {
 
 			postTransaction(new Transaction(myPosting));
 
-			return "SUCCESS";}
+			return "SUCCESS! New balance: "+bankLedger.currentBalance(accfrom);}
 
 	}
 
@@ -190,7 +220,7 @@ public class NewBank {
 
 			postTransaction(new Transaction(myPosting));
 
-			return "SUCCESS";}
+			return "SUCCESS! New balance: "+ bankLedger.currentBalance(accountNo);}
 
 	}
 
@@ -215,7 +245,7 @@ public class NewBank {
 
 			postTransaction(new Transaction(myPosting));
 
-			return "SUCCESS";}
+			return "SUCCESS! New balance: "+bankLedger.currentBalance(accountNo);}
 
 	}
 
