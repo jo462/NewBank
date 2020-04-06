@@ -100,7 +100,6 @@ public class Customer {
 		public String getAccountNo(String accountName){
 			for(Account a: accounts){
 				if(a.getAccountName().equals(accountName)){
-					//a.add(amount);
 					return a.getAccountNumber();
 				}
 			}

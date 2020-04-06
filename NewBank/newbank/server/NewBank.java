@@ -1,10 +1,10 @@
 package newbank.server;
 import java.util.ArrayList;
 /*
-*
-* @author Samuel
-*
-*/
+ *
+ * @author Samuel
+ *
+ */
 import java.util.HashMap;
 
 public class NewBank {
@@ -17,7 +17,7 @@ public class NewBank {
 	private Ledger bankLedger = new Ledger();
 	private String newBankAcc = "00000000";
 	private String newBankAccName = "New Bank PLC";
-	
+
 	private NewBank() {
 		emailadresses = new HashMap<>();
 		customers = new HashMap<>();
@@ -42,7 +42,7 @@ public class NewBank {
 		customers.put("John", john);
 		logInData.put("John",new CustomerPassword("John@1234"));
 	}
-	
+
 	public static NewBank getBank() {
 		return bank;
 	}
@@ -88,30 +88,27 @@ public class NewBank {
 				logInData.remove(customer.getKey());
 				customer.setKey(array[1]);
 				return "SUCCESS";
-			//Enables user to change email adress	
+				//Enables user to change email adress	
 			case "CHANGEPASSWORD": 
 				if(logInData.get(customer.getKey()).verifyPassword(array[1]))
 					return "FAIL";
 				logInData.put(customer.getKey(), new CustomerPassword(array[1]));
 				return "SUCCESS";			
-			//Enables user to get info about all accounts	
+				//Enables user to get info about all accounts	
 			case "SHOWMYACCOUNTS" : return showMyAccounts(customer);
 			//Enables user to deposit 
 			case "DEPOSIT":
-				//if(customers.get(customer.getKey()).deposit(array[1], (double)Double.parseDouble(array[2])))
-					
 				return deposit(customer,array[1],(double)Double.parseDouble(array[2]),array[3]);
-			//Enables user to withdraw	
+				//Enables user to withdraw	
 			case "WITHDRAW":
-				//if(customers.get(customer.getKey()).withdraw(array[1], (double) Double.parseDouble(array[2])))
-					return withdraw(customer,array[1],(double)Double.parseDouble(array[2]),array[3]);
-			//Enables user to add account			
+				return withdraw(customer,array[1],(double)Double.parseDouble(array[2]),array[3]);
+				//Enables user to add account			
 			case "NEWACCOUNT" : 
 				if(customers.get(customer.getKey()).hasAccount(array[1]))
 					return "FAIL";
 				customers.get(customer.getKey()).addAccount(new Account(array[1], 0.0));
 				return "SUCCESS";
-			//Enables user to pay to other users
+				//Enables user to pay to other users
 			case "PAY":
 				if(customers.containsKey(array[1]) == false)
 					return "FAIL";
@@ -119,89 +116,112 @@ public class NewBank {
 					customers.get(array[1]).acceptPayment((double)Double.parseDouble(array[2]));
 					return "SUCCESS";
 				}
-			//Enables user to move amount from one account to other	
+				//Enables user to move amount from one account to other	
 			case "MOVE":
-				if(customers.get(customer.getKey()).move(array[2], array[3], (double) Double.parseDouble(array[1])))
-					return "SUCCESS";
+				return move(customer, array[2],array[3],(double) Double.parseDouble(array[1]),array[4]);
 			default : return "FAIL";
 			}
 		}
 		return "FAIL";
 	}
-	
+
 	//Method to show the customer their bank balance
 	private String showMyAccounts(CustomerID customer) {
 		return (customers.get(customer.getKey())).accountsToString();
 	}
 
-	
-	
+
+
 	//Converts input to an absolute value
 	private Double abs(Double amount) {
-		
+
 		if(amount<0) {
 			amount = amount*-1;
 		}
-		
+
 		return amount;
 	}
-	
-	
-	
-	
+
+	/*
+	 * Customer move using the system date
+	 */
+	private String move(CustomerID customer,String from,String to, Double amount, String description ) {
+
+		String accfrom = customers.get(customer.getKey()).getAccountNo(from);
+		String accto = customers.get(customer.getKey()).getAccountNo(to);
+
+		if(accfrom==null || accto==null) {
+			return "Invalid account details entered, try again";
+		} else {
+
+			//Building the double entry
+			Entry entry1 = new Entry(accto,to,TransType.TRANSFER,abs(amount),customers.get(customer.getKey()).getCustomerID(),description);
+			Entry entry2 = new Entry(accfrom,from,TransType.TRANSFER,abs(amount)*-1, customers.get(customer.getKey()).getCustomerID(), description);
+			ArrayList<Entry> myPosting = new ArrayList<Entry>();
+
+			myPosting.add(entry1);
+			myPosting.add(entry2);
+
+			postTransaction(new Transaction(myPosting));
+
+			return "SUCCESS";}
+
+	}
+
+
 	/*
 	 * Customer deposit using the system date
 	 */
 	private String deposit(CustomerID customer,String accountName, Double amount, String description ) {
-				
+
 		String accountNo = customers.get(customer.getKey()).getAccountNo(accountName);
-						
+
 		if(accountNo==null) {
 			return "Account name '"+accountName+ "' does not exist, try again";
 		} else {
-		
-		//Building the double entry
-		Entry entry1 = new Entry(accountNo,accountName,TransType.DEPOSIT,abs(amount),customers.get(customer.getKey()).getCustomerID(),description);
-		Entry entry2 = new Entry(newBankAcc,newBankAccName,TransType.DEPOSIT,abs(amount)*-1, newBankAccName, "Customer Deposit");
-		ArrayList<Entry> myPosting = new ArrayList<Entry>();
-		
-		myPosting.add(entry1);
-		myPosting.add(entry2);
-		
-		postTransaction(new Transaction(myPosting));
-		
-		return "SUCCESS";}
-		
+
+			//Building the double entry
+			Entry entry1 = new Entry(accountNo,accountName,TransType.DEPOSIT,abs(amount),customers.get(customer.getKey()).getCustomerID(),description);
+			Entry entry2 = new Entry(newBankAcc,newBankAccName,TransType.DEPOSIT,abs(amount)*-1, newBankAccName, "Customer Deposit");
+			ArrayList<Entry> myPosting = new ArrayList<Entry>();
+
+			myPosting.add(entry1);
+			myPosting.add(entry2);
+
+			postTransaction(new Transaction(myPosting));
+
+			return "SUCCESS";}
+
 	}
-	
+
 	/*
 	 * Customer withdrawal using the system date
 	 */
 	private String withdraw(CustomerID customer,String accountName, Double amount, String description ) {
-				
+
 		String accountNo = customers.get(customer.getKey()).getAccountNo(accountName);
-						
+
 		if(accountNo==null) {
 			return "Account name '"+accountName+ "' does not exist, try again";
 		} else {
-						
-		//Building the double entry
-		Entry entry1 = new Entry(accountNo,accountName,TransType.WITHDRAW,abs(amount)*-1,customers.get(customer.getKey()).getCustomerID(),description);
-		Entry entry2 = new Entry(newBankAcc,newBankAccName,TransType.WITHDRAW,abs(amount), newBankAccName, "Customer Deposit");
-		ArrayList<Entry> myPosting = new ArrayList<Entry>();
-		
-		myPosting.add(entry1);
-		myPosting.add(entry2);
-		
-		postTransaction(new Transaction(myPosting));
-		
-		return "SUCCESS";}
-		
+
+			//Building the double entry
+			Entry entry1 = new Entry(accountNo,accountName,TransType.WITHDRAW,abs(amount)*-1,customers.get(customer.getKey()).getCustomerID(),description);
+			Entry entry2 = new Entry(newBankAcc,newBankAccName,TransType.WITHDRAW,abs(amount), newBankAccName, "Customer Deposit");
+			ArrayList<Entry> myPosting = new ArrayList<Entry>();
+
+			myPosting.add(entry1);
+			myPosting.add(entry2);
+
+			postTransaction(new Transaction(myPosting));
+
+			return "SUCCESS";}
+
 	}
-	
-	
-	
-	
+
+
+
+
 	/*
 	 * Adds a given transaction to the ledger
 	 */
