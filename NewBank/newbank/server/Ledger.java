@@ -61,7 +61,8 @@ public class Ledger {
 	 * Outputs transactions specific to an account number and period (month, year)
 	 */
 	public void printMonthlyAccountTransactions(String accountNo, Integer month, Integer year) {
-
+		
+		printHeader();
 		myLedger
 		.values()
 		.stream()

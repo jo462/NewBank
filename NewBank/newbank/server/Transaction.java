@@ -59,7 +59,7 @@ public class Transaction {
 		
 		Predicate<Entry> isPeriod = e-> ((month.equals(e.getDate().getMonth().getValue()) && (year.equals(e.getDate().getYear()))));
 		Predicate<Entry> isAccount = e-> e.getAccountNo().equals(accountNo);
-		
+			
 		transaction
 		.stream()
 		.filter(isAccount.and(isPeriod))
