@@ -67,7 +67,22 @@ public class Transaction {
 				
 	}
 
-
-
-
+		
+	/*
+	 * Helper method sums up the total amounts relating to an account per transaction
+	 */
+	public Double getAmount (String accountNo) {
+		
+		Double total = 0.00;
+		
+		for(Entry e : transaction) {
+			if(e.getAccountNo().equals(accountNo)) {
+				total += e.getAmount();
+			}
+		}
+		
+		return total;
+	}
+	
+	
 }

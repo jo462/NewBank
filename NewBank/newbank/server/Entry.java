@@ -117,57 +117,10 @@ public class Entry {
 			//	System.out.println(String.format("%-12s %-10s %-20s %-12s %20s", h1,h2,h3,h4,h5));
 		return String.format("%tY-%tm-%td   %-10s %-20s %-12s %,20.2f   %-10.10s\n", date,date,date, accountNo, accountName, transType,amount, description);
 	}
-
 		
-	/*
-	 * Use the below to test the classes and gain an understanding and experiment
-	 */
-	
-	public static void main(String[] args)  {
-		
-		//Test Data1:
-		Entry myEntry = new Entry(dateInput("03-03-2020"),"00000501","Main",TransType.TRANSFER,100000000.23,"Pete","Test desc");
-		Entry myEntry2 = new Entry(dateInput("01-04-2020"),"00000001","Main",TransType.TRANSFER,-100000000.23,"John","Test desc2");
-		
-		
-		ArrayList<Entry> myTrans = new ArrayList<Entry>();
-		
-		myTrans.add(myEntry);
-		myTrans.add(myEntry2);
-		
-		//Test Data2:
-		Entry myEntry3 = new Entry(dateInput("02-04-2020"),"00000501","Main",TransType.ACCOUNTOPEN,6000.23,"Pete","Test desc3");
-		Entry myEntry4 = new Entry(dateInput("05-05-2020"),"00000501","Main",TransType.ACCOUNTOPEN,-6000.23,"Pete","Test desc");
-				
-				
-		ArrayList<Entry> myTrans2 = new ArrayList<Entry>();
-				
-		myTrans2.add(myEntry3);
-		myTrans2.add(myEntry4);
-		
-				
-		Transaction test1 = new Transaction(myTrans);
-		Transaction test2 = new Transaction(myTrans2);
-		Ledger myLedger = new Ledger();
-		myLedger.addTransaction(test1);
-		myLedger.addTransaction(test2);
-		
-		System.out.println("Testing retrieval of a transaction number:");
-		System.out.println(myLedger.getTransaction("0000000002").toString());
-		
-		System.out.println("Testing Account printing");
-		myLedger.printAccountTransactions("00000501");
-		
-		System.out.println();
-		System.out.println("Testing Account & Period printing");
-		myLedger.printMonthlyAccountTransactions("00000501", 3, 2020);
-		
-		
-		
-	//	System.out.println(test1);
 		
 	}
 
 
 
-}
+
