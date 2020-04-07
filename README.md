@@ -14,3 +14,5 @@ The following functions are deployed currently:
 •	PAY  <br>
 •	MOVE <br>
 •	NEWACCOUNT  <br>
+•	Statement <br>
+•	Transaction Ledger <br>
