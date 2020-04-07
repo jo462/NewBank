@@ -1,10 +1,12 @@
 package newbank.server;
 
+import java.time.LocalDate;
 /*
  * Author @Masi_Majange
  */
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Ledger {
 
@@ -70,7 +72,70 @@ public class Ledger {
 
 	}
 
+	/*
+	 * Outputs transactions specific to an account number and period (month, year)
+	 */
+	public ArrayList<Entry> getMonthlyAccountTransactions(String accountNo, Integer month, Integer year) {
+		
+		printHeader();
+		List<Entry> myList =		myLedger
+							.values()
+							.stream()
+							.map(x -> x.forPeriod(accountNo, month, year))
+							.filter(x -> x!=null)
+							.collect(Collectors.toCollection(ArrayList<Entry>::new));
+		return (ArrayList<Entry>) myList;
+		}
 	
+	
+	/*
+	 * Returns the opening balance for a given account and period
+	 */
+	public Double openingBalance(String accountNo, Integer month, Integer year) {
+		
+		Double balance = 0.00;
+		
+		LocalDate myDate = LocalDate.of(year, month, 1);
+		
+	balance = 	myLedger
+					.values()
+					.stream()
+					.filter(x -> x.getTransactionDate().isBefore(myDate))
+					.mapToDouble(x -> x.getAmount(accountNo))
+					.sum();
+				
+		return balance;
+	}
+	
+	/*
+	 * Returns the closing balance for a given account and period
+	 */
+	
+	public Double closingBalance(String accountNo, Integer month, Integer year) {
+		
+		Double balance = 0.00;
+		
+		if(month==12) {
+			month =1;
+			year++;
+		}
+				
+		LocalDate myDate = LocalDate.of(year, month+1, 1);
+		
+	balance = 	myLedger
+					.values()
+					.stream()
+					.filter(x -> x.getTransactionDate().isBefore(myDate))
+					.mapToDouble(x -> x.getAmount(accountNo))
+					.sum();
+				
+		return balance;
+	}
+	
+		
+	/*
+	 * Returns the current balance for a given account
+	 */
 	public Double currentBalance(String accountNo) {
 		
 		Double balance = 0.00;

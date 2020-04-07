@@ -117,12 +117,44 @@ public class NewBank {
 				//Enables user to move amount from one account to other	
 			case "MOVE":
 				return move(customer, array[2],array[3],(double) Double.parseDouble(array[1]),array[4]);
+				//Enables user to get a statement
+			case "STATEMENT":
+				
+				return statement(customer,array[1], Integer.parseInt(array[2]),Integer.parseInt(array[3]));
+			
+			
 			default : return "FAIL";
 			}
 		}
 		return "FAIL";
 	}
 
+	private String statement(CustomerID customer, String account, Integer month, Integer year) {
+		
+	String accountNo = customers.get(customer.getKey()).getAccountNo(account);
+		
+	ArrayList<Entry> monthlyTrans = bankLedger.getMonthlyAccountTransactions(accountNo, month, year);
+	
+	String myTransactions = monthlyTrans.toString().replace("[", "").replace(", ", "").replace("]", "").trim();
+	String h1 = "Date";
+	String h2 = "Acc No";
+	String h3 = "Acc Name";
+	String h4 = "Trans. Type";
+	String h5 = "Amount";
+	String h6 = "Customer ref.";
+	String header1 = String.format("%-12s %-10s %-20s %-12s %20s   %-15.15s\n", h1,h2,h3,h4,h5,h6);
+	String openingBalance = String.format("Opening balance: %,61.2f\n", bankLedger.openingBalance(accountNo, month, year));
+	String closingBalance = String.format("Closing balance: %,61.2f\n", bankLedger.closingBalance(accountNo, month, year));
+	String lines = "-----------------------------------------------------------------------------------------------------\n";
+	
+	 return lines+header1+lines + openingBalance + myTransactions+"\n"+lines+closingBalance+lines;
+	}
+
+	
+	
+	
+	
+	
 	//Method to show the customer their bank balance
 	private String showMyAccounts(CustomerID customer) {
 		return (customers.get(customer.getKey())).accountsToString();
