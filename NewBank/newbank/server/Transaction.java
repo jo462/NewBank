@@ -55,18 +55,27 @@ public class Transaction {
 	 * at an <Entry> level
 	 */
 	
-	public void forPeriod(String accountNo, Integer month, Integer year) {
+	public Entry forPeriod(String accountNo, Integer month, Integer year) {
 		
-		Predicate<Entry> isPeriod = e-> ((month.equals(e.getDate().getMonth().getValue()) && (year.equals(e.getDate().getYear()))));
-		Predicate<Entry> isAccount = e-> e.getAccountNo().equals(accountNo);
+	//	Predicate<Entry> isPeriod = e-> ((month.equals(e.getDate().getMonth().getValue()) && (year.equals(e.getDate().getYear()))));
+		//Predicate<Entry> isAccount = e-> e.getAccountNo().equals(accountNo);
 			
-		transaction
-		.stream()
-		.filter(isAccount.and(isPeriod))
-		.forEach(System.out::print);
-				
+		for(Entry e : transaction) {
+			if(e.getAccountNo().equals(accountNo)) {
+				if(e.getDate().getYear()==year&& e.getDate().getMonthValue()==month) {
+					return e;
+				}
+			}
+		}
+	
+		return 	null;
+					
 	}
 
+	public LocalDate getTransactionDate() {
+		return transaction.get(0).getDate();
+		}
+	
 		
 	/*
 	 * Helper method sums up the total amounts relating to an account per transaction

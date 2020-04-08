@@ -115,7 +115,7 @@ public class Entry {
 		String h4 = "Trans. Type";
 		String h5 = "Amount";
 			//	System.out.println(String.format("%-12s %-10s %-20s %-12s %20s", h1,h2,h3,h4,h5));
-		return String.format("%tY-%tm-%td   %-10s %-20s %-12s %,20.2f   %-10.10s\n", date,date,date, accountNo, accountName, transType,amount, description);
+		return String.format("%tY-%tm-%td   %-10s %-20s %-12s %,20.2f   %-20.20s\n", date,date,date, accountNo, accountName, transType,amount, description);
 	}
 		
 		
