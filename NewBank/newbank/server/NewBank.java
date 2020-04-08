@@ -121,7 +121,7 @@ public class NewBank {
 			case "STATEMENT":
 				
 				return statement(customer,array[1], Integer.parseInt(array[2]),Integer.parseInt(array[3]));
-			
+			case "DISPLAY": return displayOptions();
 			
 			default : return "FAIL";
 			}
@@ -292,6 +292,20 @@ public class NewBank {
 	}
 
 
+	private String displayOptions() {
+		return 
+				"Type one of the following options: "
+				+ "SHOWMYPROFILE, "
+				+ "CHANGEUSERNAME, "
+				+ "CHANGEPASSWORD, "
+				+ "SHOWMYACCOUNTS, "
+				+ "STATEMENT, "
+				+ "DEPOSIT, "
+				+ "MOVE, "
+				+ "WITHDRAW, "
+				+ "NEWACCOUNT, "
+				+ "PAY";
+	}
 
 
 
