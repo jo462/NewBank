@@ -90,7 +90,7 @@ public class NewBankClientHandler extends Thread{
 			}
 			// If customer exist he can make request
 			if(customer != null) {
-				out.println("Log In Successful. What do you want to do?");
+				out.println("Log In Successful. What do you want to do? Type DISPLAY to view all options");
 				while(true) {
 					String request = in.readLine();
 					System.out.println("Request from " + customer.getKey());
