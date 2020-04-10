@@ -76,10 +76,13 @@ public class NewBank {
 		if(customers.containsKey(customer.getKey())) {
 			String[] array = request.split(" ");
 			switch(array[0].toUpperCase()) {
+			case "LOGOUT":return "Logging out!!!";	
 			//Enables user to read his own profile
 			case "SHOWMYPROFILE": return customer.getKey()+"\n"+customers.get(customer.getKey()).getEmailAdress()+"\n"+showMyAccounts(customer);
 			//Enables user to change username
 			case "CHANGEUSERNAME": 
+				if(array.length != 2)
+					return "INVALID COMMAND!";
 				if(customers.containsKey(array[1]))
 					return "FAIL";
 				customers.put(array[1], customers.get(customer.getKey()));
@@ -90,6 +93,8 @@ public class NewBank {
 				return "SUCCESS";
 				//Enables user to change email adress	
 			case "CHANGEPASSWORD": 
+				if(array.length != 2)
+					return "INVALID COMMAND!";
 				if(logInData.get(customer.getKey()).verifyPassword(array[1]))
 					return "FAIL";
 				logInData.put(customer.getKey(), new CustomerPassword(array[1]));
@@ -98,32 +103,44 @@ public class NewBank {
 			case "SHOWMYACCOUNTS" : return showMyAccounts(customer);
 			//Enables user to deposit 
 			case "DEPOSIT":
+				if(array.length != 4)
+					return "INVALID COMMAND!";
 				return deposit(customer,array[1],(double)Double.parseDouble(array[2]),array[3]);
 				//Enables user to withdraw	
 			case "WITHDRAW":
+				if(array.length != 4)
+					return "INVALID COMMAND!";
 				return withdraw(customer,array[1],(double)Double.parseDouble(array[2]),array[3]);
 				//Enables user to add account			
 			case "NEWACCOUNT" : 
+				if(array.length != 2)
+						return "INVALID COMMAND!";
 				if(customers.get(customer.getKey()).hasAccount(array[1]))
 					return "FAIL";
 				customers.get(customer.getKey()).addAccount(new Account(array[1], 0.0));
 				return "SUCCESS";
 				//Enables user to pay to other users
 			case "PAY":
+				if(array.length != 4)
+					return "INVALID COMMAND!";	
 				if(customers.containsKey(array[1]) == false) {
 					return "PAYEE NOT FOUND, TRY AGAIN";}
 					return pay(customer,array[1],(double) Double.parseDouble(array[2]),array[3]);
 				
 				//Enables user to move amount from one account to other	
 			case "MOVE":
+				if(array.length != 5)
+					return "INVALID COMMAND!";
 				return move(customer, array[2],array[3],(double) Double.parseDouble(array[1]),array[4]);
 				//Enables user to get a statement
 			case "STATEMENT":
-				
+				if(array.length != 4)
+					return "INVALID COMMAND!";
 				return statement(customer,array[1], Integer.parseInt(array[2]),Integer.parseInt(array[3]));
-			case "DISPLAY": return displayOptions();
+			case "HELP":
+				return help(customer);
 			
-			default : return "FAIL";
+			default : return "Invalid command!";
 			}
 		}
 		return "FAIL";
@@ -157,20 +174,7 @@ public class NewBank {
 	
 	//Method to show the customer their bank balance
 	private String showMyAccounts(CustomerID customer) {
-				
-		String h1 = "Acc No";
-		String h2 = "Acc Name";
-		String h3 = "Balance";
-		String lines = "-----------------------------------------------------";
-		String header = String.format("%-10s %-20s %20s",h1,h2,h3);
-		
-		String myAccounts = "";
-				
-		for(Account a : customers.get(customer.getKey()).getAllAccounts()) {
-			myAccounts += String.format("%-10s %-20s %,20.2f\n", a.getAccountNumber(),a.getAccountName(), bankLedger.currentBalance(a.getAccountNumber()));
-		}
-				 
-	return lines+"\n"+header+"\n"+lines+"\n"+myAccounts+"\n"+lines;
+		return (customers.get(customer.getKey())).accountsToString();
 	}
 
 
@@ -294,8 +298,24 @@ public class NewBank {
 
 	}
 
-
-
+	/*
+	*Provide help instructions
+	*/
+	private String help(CustomerID customer){
+		String help = "Hello "+ customers.get(customer.getKey()) + "\n\n";
+		help += "Here are the commands you can use to navigate in bank.\n";
+		help += "LOGOUT : to logout from your user profile.\n";
+		help += "SHOWMYPROFILE : To see your profile.\n";
+		help += "DEPOSIT <account name> <Amount> <Description> : To deposit money into account.\n";
+		help += "WITHDRAW <account name> <Amount> <Description> : To withdraw money into account.\n";
+		help += "CHANGEUSERNAME <new usermame>: to change usernaame for your your user profile.\n";
+		help += "NEWACCOUNT <account name>: to add new account to your profile.\n";
+		help += "DEPOSIT <account name> <Amount> <Description> : To deposit money into account.\n";
+		help += "PAY <useraccount name> <Amount> <Description> : To pay amount to <useraccount name> account.\n";
+		help += "MOVE <from account name> <to account name> <amount> <Description> : To move amount from <from account name> to <to account name>.\n";
+		help += "STATEMENT <account name> <month> <year> : To get statement of <account name> of <month> <year>.\n";
+		return help;
+	}
 
 	/*
 	 * Adds a given transaction to the ledger
@@ -305,20 +325,6 @@ public class NewBank {
 	}
 
 
-	private String displayOptions() {
-		return 
-				"Type one of the following options: "
-				+ "SHOWMYPROFILE, "
-				+ "CHANGEUSERNAME, "
-				+ "CHANGEPASSWORD, "
-				+ "SHOWMYACCOUNTS, "
-				+ "STATEMENT, "
-				+ "DEPOSIT, "
-				+ "MOVE, "
-				+ "WITHDRAW, "
-				+ "NEWACCOUNT, "
-				+ "PAY";
-	}
 
 
 
