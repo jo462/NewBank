@@ -9,7 +9,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import newbank.client.ExampleClient;
+//import newbank.client.ExampleClient;
 
 /*
  * An entry is a constituent of a transaction. E.g. when doing a transfer
