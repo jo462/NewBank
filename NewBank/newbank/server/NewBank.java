@@ -306,9 +306,11 @@ public class NewBank {
 		help += "Here are the commands you can use to navigate in bank.\n";
 		help += "LOGOUT : to logout from your user profile.\n";
 		help += "SHOWMYPROFILE : To see your profile.\n";
+		help += "SHOWMYACCOUNTS : To see your account details.\n";
 		help += "DEPOSIT <account name> <Amount> <Description> : To deposit money into account.\n";
 		help += "WITHDRAW <account name> <Amount> <Description> : To withdraw money into account.\n";
-		help += "CHANGEUSERNAME <new usermame>: to change usernaame for your your user profile.\n";
+		help += "CHANGEUSERNAME <new usermame>: to change usernaame for your user profile.\n";
+		help += "CHANGEPASSWORD <new password>: to change password for your user profile.\n";
 		help += "NEWACCOUNT <account name>: to add new account to your profile.\n";
 		help += "DEPOSIT <account name> <Amount> <Description> : To deposit money into account.\n";
 		help += "PAY <useraccount name> <Amount> <Description> : To pay amount to <useraccount name> account.\n";
