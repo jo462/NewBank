@@ -6,7 +6,6 @@ import java.time.LocalDate;
  */
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Ledger {
 
@@ -115,8 +114,9 @@ public class Ledger {
 		
 		Double balance = 0.00;
 		
+		//Resetting for the new year
 		if(month==12) {
-			month =1;
+			month =0;
 			year++;
 		}
 				
