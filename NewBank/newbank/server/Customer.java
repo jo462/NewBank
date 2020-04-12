@@ -106,4 +106,9 @@ public class Customer {
 			return null;
 		}
 	
+		//Method to get all customer accounts
+		public ArrayList<Account> getAllAccounts(){
+			return accounts;
+		}
+		
 }

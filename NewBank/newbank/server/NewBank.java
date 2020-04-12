@@ -174,7 +174,19 @@ public class NewBank {
 	
 	//Method to show the customer their bank balance
 	private String showMyAccounts(CustomerID customer) {
-		return (customers.get(customer.getKey())).accountsToString();
+		String h1 = "Acc No";
+		String h2 = "Acc Name";
+		String h3 = "Balance";
+		String lines = "-----------------------------------------------------";
+		String header = String.format("%-10s %-20s %20s",h1,h2,h3);
+
+		String myAccounts = "";
+
+		for(Account a : customers.get(customer.getKey()).getAllAccounts()) {
+			myAccounts += String.format("%-10s %-20s %,20.2f\n", a.getAccountNumber(),a.getAccountName(), bankLedger.currentBalance(a.getAccountNumber()));
+		}
+
+	return lines+"\n"+header+"\n"+lines+"\n"+myAccounts+"\n"+lines;
 	}
 
 
